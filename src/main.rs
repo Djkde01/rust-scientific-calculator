@@ -4,6 +4,7 @@ fn main() {
     // Regex
 
     let re_add = Regex::new(r"(\d+)\s?\+\s?(\d+)").unwrap();
+    let re_sub = Regex::new(r"(\d+)\s?\-\s?(\d+)").unwrap();
     let re_mul = Regex::new(r"(\d+)\s?\*\s?(\d+)").unwrap();
 
     // User input
@@ -42,12 +43,32 @@ fn main() {
             break;
         }
         let caps = caps.unwrap();
+
         let caps_expr = caps.get(0).unwrap().as_str();
-        let first_num = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
-        let second_num = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
-        let addition = first_num + second_num;
+        let caps_num1 = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
+        let caps_num2 = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
+        let addition = caps_num1 + caps_num2;
 
         input = input.replace(caps_expr, &addition.to_string());
+    }
+
+    //Substraction
+
+    loop {
+        let caps = re_sub.captures(input.as_str());
+
+        if caps.is_none() {
+            break;
+        }
+
+        let caps = caps.unwrap();
+
+        let caps_expr = caps.get(0).unwrap().as_str();
+        let caps_num1 = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
+        let caps_num2 = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
+        let substraction = caps_num1 - caps_num2;
+
+        input = input.replace(caps_expr, &substraction.to_string());
     }
 
     // Show results
