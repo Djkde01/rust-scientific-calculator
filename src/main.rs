@@ -1,5 +1,28 @@
 use regex::Regex;
 
+// Math operations
+fn math_operation(expression: Regex, mut operation: String, operator: &str) -> String {
+    loop {
+        let caps = expression.captures(operation.as_str());
+        if caps.is_none() {
+            break;
+        }
+        let caps = caps.unwrap();
+        let caps_expression = caps.get(0).unwrap().as_str();
+        let caps_num1 = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
+        let caps_num2 = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
+        let result = match operator {
+            "+" => caps_num1 + caps_num2,
+            "-" => caps_num1 - caps_num2,
+            "*" => caps_num1 * caps_num2,
+            "/" => caps_num1 / caps_num2,
+            _ => 0,
+        };
+        operation = operation.replace(caps_expression, &result.to_string());
+    }
+    operation
+}
+
 fn main() {
     // Regex
 
@@ -14,82 +37,10 @@ fn main() {
     let mut input = String::new();
     std::io::stdin().read_line(&mut input).unwrap();
 
-    // Math operations
-
-    // Multiplication
-
-    loop {
-        let caps = re_mul.captures(&input.as_str());
-
-        if caps.is_none() {
-            break;
-        }
-
-        let caps = caps.unwrap();
-
-        let caps_expr = caps.get(0).unwrap().as_str();
-        let caps_num1 = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
-        let caps_num2 = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
-        let caps_result = caps_num1 * caps_num2;
-
-        input = input.replace(caps_expr, &caps_result.to_string());
-    }
-
-    // Division
-
-    loop {
-        let caps = re_div.captures(&input.as_str());
-
-        if caps.is_none() {
-            break;
-        }
-
-        let caps = caps.unwrap();
-
-        let caps_expr = caps.get(0).unwrap().as_str();
-        let caps_num1 = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
-        let caps_num2 = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
-        let caps_result = caps_num1 / caps_num2;
-
-        input = input.replace(caps_expr, &caps_result.to_string());
-    }
-
-    // Addition
-
-    loop {
-        let caps = re_add.captures(input.as_str());
-
-        if caps.is_none() {
-            break;
-        }
-        let caps = caps.unwrap();
-
-        let caps_expr = caps.get(0).unwrap().as_str();
-        let caps_num1 = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
-        let caps_num2 = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
-        let addition = caps_num1 + caps_num2;
-
-        input = input.replace(caps_expr, &addition.to_string());
-    }
-
-    //Substraction
-
-    loop {
-        let caps = re_sub.captures(input.as_str());
-
-        if caps.is_none() {
-            break;
-        }
-
-        let caps = caps.unwrap();
-
-        let caps_expr = caps.get(0).unwrap().as_str();
-        let caps_num1 = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
-        let caps_num2 = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
-        let substraction = caps_num1 - caps_num2;
-
-        input = input.replace(caps_expr, &substraction.to_string());
-    }
+    input = math_operation(re_mul, input.clone(), "*");
+    input = math_operation(re_div, input.clone(), "/");
+    input = math_operation(re_add, input.clone(), "+");
+    input = math_operation(re_sub, input.clone(), "-");
 
     // Show results
 
