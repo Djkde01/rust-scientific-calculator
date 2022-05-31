@@ -13,16 +13,22 @@ fn main() {
 
     // Math operations
 
-    let caps = re_add.captures(input.as_str()).unwrap();
+    loop {
+        let caps = re_add.captures(input.as_str());
 
-    let first_num = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
-    let second_num = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
+        if caps.is_none() {
+            break;
+        }
+        let caps = caps.unwrap();
+        let caps_expr = caps.get(0).unwrap().as_str();
+        let first_num = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
+        let second_num = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
+        let addition = first_num + second_num;
 
-    let addition = first_num + second_num;
-
-    println!("{:?}, first {}, second {}", caps, first_num, second_num);
+        input = input.replace(caps_expr, &addition.to_string());
+    }
 
     // Show results
 
-    println!("Result: {}", addition);
+    println!("Result: {}", input);
 }
